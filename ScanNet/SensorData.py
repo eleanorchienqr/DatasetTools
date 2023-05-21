@@ -16,8 +16,8 @@ class RGBDFrame():
     self.timestamp_depth = struct.unpack('Q', file_handle.read(8))[0]
     self.color_size_bytes = struct.unpack('Q', file_handle.read(8))[0]
     self.depth_size_bytes = struct.unpack('Q', file_handle.read(8))[0]
-    self.color_data = ''.join(struct.unpack('c'*self.color_size_bytes, file_handle.read(self.color_size_bytes)))
-    self.depth_data = ''.join(struct.unpack('c'*self.depth_size_bytes, file_handle.read(self.depth_size_bytes)))
+    self.color_data = b''.join(struct.unpack('c'*self.color_size_bytes, file_handle.read(self.color_size_bytes)))
+    self.depth_data = b''.join(struct.unpack('c'*self.depth_size_bytes, file_handle.read(self.depth_size_bytes)))
 
 
   def decompress_depth(self, compression_type):
@@ -54,7 +54,7 @@ class SensorData:
       version = struct.unpack('I', f.read(4))[0]
       assert self.version == version
       strlen = struct.unpack('Q', f.read(8))[0]
-      self.sensor_name = ''.join(struct.unpack('c'*strlen, f.read(strlen)))
+      self.sensor_name = b''.join(struct.unpack('c'*strlen, f.read(strlen)))
       self.intrinsic_color = np.asarray(struct.unpack('f'*16, f.read(16*4)), dtype=np.float32).reshape(4, 4)
       self.extrinsic_color = np.asarray(struct.unpack('f'*16, f.read(16*4)), dtype=np.float32).reshape(4, 4)
       self.intrinsic_depth = np.asarray(struct.unpack('f'*16, f.read(16*4)), dtype=np.float32).reshape(4, 4)
